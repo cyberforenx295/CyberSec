@@ -1,14 +1,11 @@
-import prisma from '@/lib/prisma';
+import { caseStudies } from '@/data/case-studies';
 
 export const metadata = {
   title: 'Case Studies — CyberForenX'
 };
 
-export default async function CaseStudiesPage() {
-  const cases = await prisma.caseStudy.findMany({
-    orderBy: { publishedAt: 'desc' },
-    take: 12
-  });
+export default function CaseStudiesPage() {
+  const cases = caseStudies;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 md:px-6">
@@ -19,7 +16,7 @@ export default async function CaseStudiesPage() {
 
       {cases.length === 0 ? (
         <div className="rounded-lg border border-dashed border-white/15 p-6 text-neutral-400">
-          No case studies yet. Add some via Prisma Studio or a seed script.
+          No case studies yet.
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">

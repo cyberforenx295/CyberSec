@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 
+const CONTACT_ENDPOINT = (process.env.NEXT_PUBLIC_CONTACT_ENDPOINT || '').trim();
+const CONTACT_EMAIL = (process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'contact@cyberforenx.com').trim();
+
 export function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -17,15 +20,31 @@ export function ContactForm() {
     setError(null);
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(form)
-      });
+      if (CONTACT_ENDPOINT) {
+        const res = await fetch(CONTACT_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            accept: 'application/json'
+          },
+          body: JSON.stringify(form)
+        });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error || 'Failed to submit message');
+        if (!res.ok) {
+          let detail = 'Failed to submit message';
+          try {
+            const data = await res.json();
+            detail = data?.error || data?.message || detail;
+          } catch {}
+          throw new Error(detail);
+        }
+      } else {
+        // Fallback to mailto if no endpoint configured
+        const subject = encodeURIComponent('Contact — CyberForenX');
+        const body = encodeURIComponent(
+          `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
+        );
+        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
       }
 
       setStatus('success');

@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -10,7 +12,7 @@ const nextConfig = {
     ]
   },
   experimental: {
-    // Enable server actions if needed later
+    // Enable server actions if needed later (not used for static export)
     serverActions: {
       bodySizeLimit: '2mb'
     }

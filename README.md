@@ -1,12 +1,12 @@
-# CyberForenX — Website (Next.js + Tailwind + Prisma)
+# CyberForenX — Website (Next.js + Tailwind, Static Export)
 
-Production-ready starter for a cybersecurity company website with a database-backed contact form and case studies.
+Production-ready cybersecurity company website designed for static hosting platforms.
 
 ## Stack
 
 - Next.js 15 (App Router, React 19)
 - Tailwind CSS v4
-- Prisma ORM (SQLite by default; Postgres-ready)
+- Static export (no server or database required)
 
 ## Getting Started
 
@@ -22,22 +22,11 @@ npm install
 cp .env.example .env
 ```
 
-By default it uses SQLite at `prisma/dev.db`. To use Postgres, replace `DATABASE_URL` with your Postgres connection string.
+Optional public variables for the contact form:
+- `NEXT_PUBLIC_CONTACT_ENDPOINT` — a third-party form endpoint (e.g., Formspree/Getform)
+- `NEXT_PUBLIC_CONTACT_EMAIL` — fallback mailto address (default: contact@cyberforenx.com)
 
-3) Initialize the database (generate client + migrate):
-
-```bash
-npm run prisma:generate
-npm run prisma:migrate -- --name init
-```
-
-Optionally open Prisma Studio to view/edit data:
-
-```bash
-npm run prisma:studio
-```
-
-4) Start the dev server:
+3) Start the dev server:
 
 ```bash
 npm run dev
@@ -45,37 +34,37 @@ npm run dev
 
 Visit http://localhost:3000
 
+4) Build a static site:
+
+```bash
+npm run build
+```
+
+This generates a static site in the `out/` folder (configured via `output: 'export'`).
+
+Deploy the contents of `out/` to any static host (GitHub Pages, Netlify static, Cloudflare Pages static, S3, etc.).
+
 ## Pages
 
 - `/` Home (Hero, Services Highlights, Trusted By)
 - `/about` Company mission, vision, expertise
 - `/services` Detailed services with anchors
-- `/case-studies` Lists case studies from the database
-- `/contact` Contact form (POST /api/contact) persists messages to DB
+- `/case-studies` Static case studies (editable in `data/case-studies.ts`)
+- `/contact` Contact form
+  - If `NEXT_PUBLIC_CONTACT_ENDPOINT` is set, submissions are POSTed there (JSON)
+  - Otherwise, it falls back to opening a mail client (mailto)
 
-## Database Schema (Prisma)
+## Customization
 
-- `ContactMessage` — stores contact form submissions
-- `CaseStudy` — title, summary, industry, timestamps
-- `TeamMember` — basic team profile fields
-
-Schema file: `prisma/schema.prisma`
-
-## Seeding Data (optional)
-
-You can add case studies using Prisma Studio:
-
-```bash
-npm run prisma:studio
-```
-
-Or write a small seed script that uses `@prisma/client`.
+- Brand colors and global styles: `app/globals.css`
+- Navbar/Footer: `components/Navbar.tsx`, `components/Footer.tsx`
+- Logo: using a remote image via `next/image`; update the URL or move a logo to `/public/` and reference it
+- Case Studies: edit `data/case-studies.ts`
 
 ## Deploy
 
-- For SQLite: prefer running a Postgres database in production.
-- Set `DATABASE_URL` accordingly (e.g., on Vercel, Railway, Fly.io, Render, etc.).
-- Run `prisma migrate deploy` during CI/CD or first boot to apply migrations.
+- Run `npm run build` and deploy the generated `out/` directory.
+- The project is static-only and does not require a Node server.
 
 ## License
 

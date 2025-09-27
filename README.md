@@ -22,9 +22,9 @@ npm install
 cp .env.example .env
 ```
 
-Optional public variables for the contact form:
-- `NEXT_PUBLIC_CONTACT_ENDPOINT` — a third-party form endpoint (e.g., Formspree/Getform)
-- `NEXT_PUBLIC_CONTACT_EMAIL` — fallback mailto address (default: contact@cyberforenx.com)
+Contact form configuration (Web3Forms):
+- `NEXT_PUBLIC_WEB3FORMS_KEY` — required to enable submissions via https://api.web3forms.com/submit
+- `NEXT_PUBLIC_CONTACT_EMAIL` — fallback mailto address (used only if no Web3Forms key is set)
 
 3) Start the dev server:
 
@@ -51,8 +51,8 @@ Deploy the contents of `out/` to any static host (GitHub Pages, Netlify static, 
 - `/services` Detailed services with anchors
 - `/case-studies` Static case studies (editable in `data/case-studies.ts`)
 - `/contact` Contact form
-  - If `NEXT_PUBLIC_CONTACT_ENDPOINT` is set, submissions are POSTed there (JSON)
-  - Otherwise, it falls back to opening a mail client (mailto)
+  - Uses Web3Forms when `NEXT_PUBLIC_WEB3FORMS_KEY` is set
+  - Otherwise, falls back to opening a mail client (mailto)
 
 ## Customization
 

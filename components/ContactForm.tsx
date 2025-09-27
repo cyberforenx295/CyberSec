@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 
-const CONTACT_ENDPOINT = (process.env.NEXT_PUBLIC_CONTACT_ENDPOINT || '').trim();
+const WEB3_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3_ACCESS_KEY = (process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '').trim();
 const CONTACT_EMAIL = (process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'contact@cyberforenx.com').trim();
 
 export function ContactForm() {
@@ -20,26 +21,34 @@ export function ContactForm() {
     setError(null);
 
     try {
-      if (CONTACT_ENDPOINT) {
-        const res = await fetch(CONTACT_ENDPOINT, {
+      if (WEB3_ACCESS_KEY) {
+        const payload = {
+          access_key: WEB3_ACCESS_KEY,
+          subject: 'Contact — CyberForenX',
+          from_name: 'CyberForenX Website',
+          botcheck: '',
+          name: form.name,
+          email: form.email,
+          replyto: form.email,
+          message: form.message
+        };
+
+        const res = await fetch(WEB3_ENDPOINT, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
             accept: 'application/json'
           },
-          body: JSON.stringify(form)
+          body: JSON.stringify(payload)
         });
 
-        if (!res.ok) {
-          let detail = 'Failed to submit message';
-          try {
-            const data = await res.json();
-            detail = data?.error || data?.message || detail;
-          } catch {}
+        const data = await res.json().catch(() => ({} as any));
+        if (!res.ok || data?.success === false) {
+          const detail = data?.message || data?.error || 'Failed to submit message';
           throw new Error(detail);
         }
       } else {
-        // Fallback to mailto if no endpoint configured
+        // Fallback to mailto if no Web3Forms key provided
         const subject = encodeURIComponent('Contact — CyberForenX');
         const body = encodeURIComponent(
           `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
@@ -56,7 +65,22 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="card-glass space-y-4 p-6">
+    <form
+      onSubmit={onSubmit}
+      action={WEB3_ACCESS_KEY ? WEB3_ENDPOINT : undefined}
+      method={WEB3_ACCESS_KEY ? 'POST' : undefined}
+      className="card-glass space-y-4 p-6"
+    >
+      {/* Hidden fields for Web3Forms (also enable no-JS fallback submit) */}
+      {WEB3_ACCESS_KEY && (
+        <>
+          <input type="hidden" name="access_key" value={WEB3_ACCESS_KEY} />
+          <input type="hidden" name="subject" value="Contact — CyberForenX" />
+          <input type="hidden" name="from_name" value="CyberForenX Website" />
+          <input type="checkbox" name="botcheck" className="hidden" tabIndex={-1} autoComplete="off" />
+        </>
+      )}
+
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <label htmlFor="name" className="mb-1 block text-sm text-neutral-300">

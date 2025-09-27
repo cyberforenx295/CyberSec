@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
   return (
@@ -6,7 +7,13 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-10 text-sm text-neutral-400 md:grid-cols-4 md:px-6">
         <div className="col-span-1 md:col-span-2">
           <div className="mb-3 flex items-center gap-2">
-            <div className="h-6 w-6 rounded-md bg-emerald-500" />
+            <Image
+              src="https://avatars.githubusercontent.com/u/166294877?v=4"
+              alt="CyberForenX logo"
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-md"
+            />
             <span className="text-base font-semibold text-neutral-200">
               CyberForenX
             </span>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -20,7 +21,13 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-md bg-emerald-500" />
+          <Image
+            src="https://avatars.githubusercontent.com/u/166294877?v=4"
+            alt="CyberForenX logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-md"
+          />
           <span className="text-lg font-bold tracking-tight">CyberForenX</span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">

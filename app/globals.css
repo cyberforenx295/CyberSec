@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+/* App-wide base styles */
+:root {
+  --brand-primary: 16 185 129; /* emerald-500 */
+  --brand-accent: 59 130 246; /* blue-500 */
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Subtle grid overlay for cyber look */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Card glass effect */
+.card-glass {
+  @apply rounded-xl border border-white/10 bg-white/5 backdrop-blur-md;
+}
+
+/* Buttons */
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition;
+}
+
+.btn-primary {
+  @apply btn bg-emerald-500 text-black hover:bg-emerald-400;
+}
+
+.btn-outline {
+  @apply btn border border-emerald-400 text-emerald-300 hover:bg-emerald-900/40;
+}
+
+/* Typography tweaks */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+}
